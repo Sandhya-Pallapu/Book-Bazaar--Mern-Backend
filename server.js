@@ -22,7 +22,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: 'https://book-bazaaar-mern-frontend.onrender.com',
+    origin: "https://book-bazaar-mern-frontend.vercel.app",
     credentials: true,
   },
 });
