@@ -22,7 +22,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://book-bazaar-a-peer-to-peer-book-exc-one.vercel.app",
+    origin: "https://book-bazaar-mern-frontend-gq97.vercel.app/",
     credentials: true,
   },
 });
