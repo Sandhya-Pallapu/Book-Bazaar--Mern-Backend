@@ -3,26 +3,23 @@ const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    username: {
       type: String,
-      required: [true, 'Please enter your name'],
+      required: [true, 'Please enter your username'],
     },
     email: {
       type: String,
       required: [true, 'Please enter your email'],
       unique: true,
-      lowercase:true,
-      trim:true,
+      lowercase: true,
+      trim: true,
     },
     password: {
       type: String,
       required: [true, 'Please enter your password'],
     },
-     wishlist: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Book',
-      }
+    wishlist: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Book' }
     ],
     role: {
       type: String,
@@ -30,11 +27,8 @@ const userSchema = new mongoose.Schema(
       default: 'user',
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
-
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
@@ -49,3 +43,4 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
+
