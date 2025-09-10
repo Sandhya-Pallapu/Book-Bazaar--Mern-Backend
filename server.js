@@ -18,18 +18,10 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
-
-const allowedOrigins = [
-  'https://book-bazaar-frontend-final.vercel.app',
-  'https://book-bazaar-frontend-final-ey85-425jiouo8.vercel.app'
-];
-
 app.use(cors({
   origin: function(origin, callback) {
-    
     if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
+    if (/\.vercel\.app$/.test(origin) || origin === 'https://book-bazaar-frontend-final.vercel.app') {
       callback(null, true);
     } else {
       callback(new Error('CORS not allowed from this origin'));
@@ -42,7 +34,14 @@ app.use(express.json());
 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: function(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (/\.vercel\.app$/.test(origin) || origin === 'https://book-bazaar-frontend-final.vercel.app') {
+        callback(null, true);
+      } else {
+        callback(new Error('CORS not allowed from this origin'));
+      }
+    },
     credentials: true,
   },
 });
@@ -88,7 +87,6 @@ app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
-
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Server Error', error: err.message });
@@ -96,4 +94,3 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(` Server with Socket.IO running on port ${PORT}`));
-
