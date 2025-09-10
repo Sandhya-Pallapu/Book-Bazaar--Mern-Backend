@@ -5,7 +5,6 @@ const http = require('http');
 const { Server } = require('socket.io');
 const connectDB = require('./config/db');
 
-
 const userRoutes = require('./routes/authRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const wishlistRoutes = require('./routes/wishListRoutes');
@@ -20,9 +19,30 @@ const app = express();
 const server = http.createServer(app);
 
 
+const allowedOrigins = [
+  'https://book-bazaar-frontend-final.vercel.app',
+  'https://book-bazaar-frontend-final-ey85-425jiouo8.vercel.app'
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed from this origin'));
+    }
+  },
+  credentials: true
+}));
+
+app.use(express.json());
+
 const io = new Server(server, {
   cors: {
-    origin: "",
+    origin: allowedOrigins,
     credentials: true,
   },
 });
@@ -49,11 +69,6 @@ io.on('connection', (socket) => {
   });
 });
 
-app.use(cors({ origin: "https://book-bazaar-frontend-final.vercel.app",
-       credentials: true }));
-app.use(express.json());
-
-
 app.use(async (req, res, next) => {
   const email = req.headers['x-user-email'];
   if (email) {
@@ -63,13 +78,11 @@ app.use(async (req, res, next) => {
   next();
 });
 
-
 app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/messages', messageRoutes);
-
 
 app.get('/', (req, res) => {
   res.send('API is running...');
@@ -83,3 +96,4 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(` Server with Socket.IO running on port ${PORT}`));
+
