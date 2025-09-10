@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
   });
 });
 
-app.use(cors({ origin: "http://localhost:3000",
+app.use(cors({ origin: "https://book-bazaar-frontend-7szibjx4u-pallapusandhya04-4907s-projects.vercel.app",
        credentials: true }));
 app.use(express.json());
 
