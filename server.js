@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
   });
 });
 
-app.use(cors({ origin: "https://book-bazaar-frontend-final-ey85.vercel.app",
+app.use(cors({ origin: "book-bazaar-frontend-final-ey85.vercel.app",
        credentials: true }));
 app.use(express.json());
 
